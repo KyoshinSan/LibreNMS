@@ -241,3 +241,148 @@ Si vous rencontrez des problèmes avec votre installation, exécutez **validate.
 cd /opt/librenms
 ./validate.php
 ```
+
+## Ajouter un équipement
+
+**SNMP** est un protocole réseau qui permet le **monitoring** et la **supervision** d'éléments systèmes et réseau. Généralement, un serveur de supervision utilise SNMP pour connaitre rapidement l'état du parc informatique (switch, routeur, serveurs) comme l'occupation RAM, CPU, Disque, etc.
+
+### Switch et routeur
+
+Dans le cas des switchs et des routeurs le snmp est à activé dans les configuration. Une fois configurer, ajouter les via l'interface Web de LibreNMS.
+
+### CentOS 7
+
+Dans cette partie, nous allons voir comment installer SNMP sous CentOS 7, notre machine avec LibreNMS pourra alors interrogé la machine en SNMP.
+
+### Installation de SNMPD
+
+Il faut bien entendu commencer par installer le service SNMP sur notre machine Linux. Le service se mettra alors en écoute sur le port 161 en UDP afin d'être prêt à répondre aux sollicitations extérieures.
+
+```
+yum install net-snmp net-snmpd-utils
+```
+
+Net-snmp va alors s'installer, ainsi que ses dépendances.
+
+Il faudra également activer le démarrage du service SNMP au démarrage du serveur avec la commande suivante :
+
+```
+systemctl enable snmpd
+```
+
+### Mise en route
+
+Démarrer le service :
+
+```
+systemctl start snmpd
+```
+
+Enfin, une fois celui-ci démarré, nous verrons qu'il est actif sur le port UDP 161, cela avec la commande **`ss`** qui permet de lister les ports en écoute :
+
+```
+ss -ulnp
+```
+
+Pour détailler cette commande :
+
+-   l'option **`u`** permet de lister les ports UDP uniquement
+-   l'option **`l`** permet de lister les ports en écoute (**Listening**)
+-   l'option **`n`** permet d'afficher les numéros de ports et non leur correspondance (exemple : afficher **22** plutôt que **SSH**)
+-   l'option **`p`** permet d'afficher les processus correspondants aux ports en écoute
+
+Dans tous les cas, nous devrions avoir quelque chose qui ressemble à cela :
+
+```
+UNCONN     0      0                                   *:161                                             *:*                   
+users:(("snmpd",pid=21551,fd=6))
+```
+
+### Configuration
+
+Nous allons maintenant effectuer quelques configurations basiques, notre service SNMP écoute maintenant les sollicitations extérieures, mais il reste quelques changements à faire dans la configuration pour qu'il soit pleinement opérationnel.
+
+Dans le fichier **/etc/snmp/snmpd.conf** à la ligne 41, nous allons changer la "**community**" . La community est une sorte de "**mot de passe**" qui va permettre de restreindre l'accès aux informations fournis par les serveurs SNMP. Par défaut, cette **community** est généralement "**public**" , c'est pourquoi il est recommandé de changer, autrement, n'importe qui dans votre réseau pourra alors questionner vos serveurs sur leurs états de santé :
+
+```
+# First, map the community name "public" into a "security name"
+
+#       sec.name  source          community
+com2sec notConfigUser  default       test
+```
+
+Dans le bloc ci-dessus, j'ai remplacé "**public**" , par "**test**" pour vous donner un exemple.
+
+Il est également nécessaire de corriger les lignes 55 et 56 pour qu'elles ressemblent à cela :
+
+```
+view   systemview   included   .1.3.6.1.2.1
+view   systemview   included   .1.3.6.1.2.1.25.1
+```
+
+Enfin, afin d'ouvrir certaines informations et de permettre qu'elles soient transmises via SNMP, nous allons décommenter les lignes suivantes :
+
+-   lignes 85
+-   lignes 122 à 147
+-   lignes 151
+
+Aux lignes 162 et 163, il peut être utile de mettre les valeurs propres à votre serveur, par exemple :
+
+```
+# It is also possible to set the sysContact and sysLocation system
+# variables through the snmpd.conf file:
+syslocation Serveur Test 01 
+syscontact root@devnull.fr
+```
+
+Une fois tout cela fait, on pourra redémarrer SNMP pour recharger la configuration modifiée ("**systemctl restart snmpd**" ), puis passer à la phase de test de notre service SNMP.
+
+### Test de communication
+
+Nous allons maintenant effectuer quelques tests pour vérifier que notre service SNMP est fonctionnel. Étant donné que nous avons installé la partie "**client**" de SNMP, on peut tester cela avec la machine LibreNMS, en utilisant la commande "**snmpwalk**" :
+
+```
+snmpwalk -v1 ip-de-la-machine -c test
+```
+> Ajouter l'**ip** de la machine **cliente** ainsi que son **community**
+ 
+ On devrait avoir cela en **output** :
+```
+...
+
+SNMPv2-MIB::sysORLastChange.0 = Timeticks: (5) 0:00:00.05
+SNMPv2-MIB::sysORID.1 = OID: SNMP-MPD-MIB::snmpMPDCompliance
+SNMPv2-MIB::sysORID.2 = OID: SNMP-USER-BASED-SM-MIB::usmMIBCompliance
+SNMPv2-MIB::sysORID.3 = OID: SNMP-FRAMEWORK-MIB::snmpFrameworkMIBCompliance
+SNMPv2-MIB::sysORID.4 = OID: SNMPv2-MIB::snmpMIB
+SNMPv2-MIB::sysORID.5 = OID: TCP-MIB::tcpMIB
+SNMPv2-MIB::sysORID.6 = OID: IP-MIB::ip
+SNMPv2-MIB::sysORID.7 = OID: UDP-MIB::udpMIB
+SNMPv2-MIB::sysORID.8 = OID: SNMP-VIEW-BASED-ACM-MIB::vacmBasicGroup
+SNMPv2-MIB::sysORID.9 = OID: SNMP-NOTIFICATION-MIB::snmpNotifyFullCompliance
+SNMPv2-MIB::sysORID.10 = OID: NOTIFICATION-LOG-MIB::notificationLogMIB
+SNMPv2-MIB::sysORDescr.1 = STRING: The MIB for Message Processing and Dispatching.
+SNMPv2-MIB::sysORDescr.2 = STRING: The management information definitions for the SNMP User-based Security Model.
+SNMPv2-MIB::sysORDescr.3 = STRING: The SNMP Management Architecture MIB.
+SNMPv2-MIB::sysORDescr.4 = STRING: The MIB module for SNMPv2 entities
+SNMPv2-MIB::sysORDescr.5 = STRING: The MIB module for managing TCP implementations
+SNMPv2-MIB::sysORDescr.6 = STRING: The MIB module for managing IP and ICMP implementations
+SNMPv2-MIB::sysORDescr.7 = STRING: The MIB module for managing UDP implementations
+SNMPv2-MIB::sysORDescr.8 = STRING: View-based Access Control Model for SNMP.
+SNMPv2-MIB::sysORDescr.9 = STRING: The MIB modules for managing SNMP Notification, plus filtering.
+SNMPv2-MIB::sysORDescr.10 = STRING: The MIB module for logging SNMP Notifications.
+SNMPv2-MIB::sysORUpTime.1 = Timeticks: (4) 0:00:00.04
+SNMPv2-MIB::sysORUpTime.2 = Timeticks: (4) 0:00:00.04
+SNMPv2-MIB::sysORUpTime.3 = Timeticks: (4) 0:00:00.04
+SNMPv2-MIB::sysORUpTime.4 = Timeticks: (4) 0:00:00.04
+SNMPv2-MIB::sysORUpTime.5 = Timeticks: (5) 0:00:00.05
+SNMPv2-MIB::sysORUpTime.6 = Timeticks: (5) 0:00:00.05
+SNMPv2-MIB::sysORUpTime.7 = Timeticks: (5) 0:00:00.05
+SNMPv2-MIB::sysORUpTime.8 = Timeticks: (5) 0:00:00.05
+SNMPv2-MIB::sysORUpTime.9 = Timeticks: (5) 0:00:00.05
+SNMPv2-MIB::sysORUpTime.10 = Timeticks: (5) 0:00:00.05
+
+...
+```
+
+Vous pouvez maintenant l'ajouter à LibreNMS.
