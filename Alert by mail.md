@@ -19,8 +19,8 @@ public $FromName = 'LibreNMS';
 
 Ensuite rendez vous sur l'interface web de LibreNMS :
 
-![Sceenshot_2](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_2.png)
+![Screenshot_2](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_2.png)
 
 Compléter les informations suivantes et enregistrer :
 
-![Sceenshot_3](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_3.png)
+![Screenshot_3](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_3.png)
