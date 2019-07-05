@@ -39,3 +39,16 @@ Compléter les champs suivants. Pour les règles, utiliser les [**`Entités`**](
 > Ici, on configure une règle pour savoir si la machine répond au ping
 
 ![Screenshot_6](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_6.png)
+
+
+## Modèles d'alertes
+
+Enfin, nous allons configurer les modèles d'alertes. Cela permet d'avoir des mails avec nos propres messages d'alertes. Sur l'interface web commencer à créer un modèle :
+
+![Screenshot_7](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_7.png)
+
+Compléter en fonction de vos [besoins](https://docs.librenms.org/Alerting/Templates/) et **attacher le modèle à une règle** :
+
+![Screenshot_8](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_8.png)
+
+Enfin tester votre alertes !
