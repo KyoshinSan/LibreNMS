@@ -8,7 +8,7 @@ Tout d'abord, il est important de savoir que les alertes de LibreNMS ce compose 
 
 ## Transport d'alertes
 
-Dans un premier temps, nous allons configurer le transporteur d'alertes. LibreNMS propose beaucoup de [solutions](https://docs.librenms.org/Alerting/Transports/) dans ce domaine, mais nous allons utilisé les mails. Pour ce faire il faut configurer un **serveur de mail** (postfix,...), puis modifier ce fichier dans LibreNMS :
+Dans un premier temps, nous allons configurer le transporteur d'alertes. LibreNMS propose beaucoup de [solutions](https://docs.librenms.org/Alerting/Transports/) dans ce domaine, mais nous allons utiliser les mails. Pour ce faire il faut configurer un **serveur de mail** (postfix,...), puis modifier ce fichier dans LibreNMS :
 
 ```
 vi /opt/librenms/vendor/phpmailer/phpmailer/src/PHPMailer.php
@@ -17,7 +17,7 @@ public $From = 'librenms@exemple.fr';
 public $FromName = 'LibreNMS';
 ```
 
-Ensuite rendez vous sur l'interface web de LibreNMS :
+Ensuite rendez-vous sur l'interface web de LibreNMS :
 
 ![Screenshot_2](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_2.png)
 
@@ -31,11 +31,11 @@ Vous pouvez tester si le mail marche bien :
 
 ## Règles d'alertes
 
-Maintenant, nous allons configurer les règles d'alertes. Rendez vous sur l'interface web de LibreNMS et créer une alerte :
+Maintenant, nous allons configurer les règles d'alertes. Rendez-vous sur l'interface web de LibreNMS et créer une alerte :
 
 ![Screenshot_5](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_5.png)
 
-Compléter les champs suivants. Pour les règles, utiliser les [**`Entités`**](https://docs.librenms.org/Alerting/Entities/) de la documentation de LibreNMS en fonction vos besoin.
+Compléter les champs suivants. Pour les règles, utiliser les [**`Entités`**](https://docs.librenms.org/Alerting/Entities/) de la documentation de LibreNMS en fonction vos besoins.
 > Ici, on configure une règle pour savoir si la machine répond au ping
 
 ![Screenshot_6](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_6.png)
@@ -43,7 +43,7 @@ Compléter les champs suivants. Pour les règles, utiliser les [**`Entités`**](
 
 ## Modèles d'alertes
 
-Enfin, nous allons configurer les modèles d'alertes. Cela permet d'avoir des mails avec nos propres messages d'alertes. Sur l'interface web commencer à créer un modèle :
+Enfin, nous allons configurer les modèles d'alertes. Cela permet d'avoir des mails avec nos propres messages d'alertes. Sur l'interface web crée un nouveau modèle :
 
 ![Screenshot_7](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_7.png)
 
@@ -51,4 +51,4 @@ Compléter en fonction de vos [besoins](https://docs.librenms.org/Alerting/Templ
 
 ![Screenshot_8](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_8.png)
 
-Enfin tester votre alertes !
+Enfin tester votre alerte !
