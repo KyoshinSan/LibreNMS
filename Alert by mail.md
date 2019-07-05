@@ -24,3 +24,18 @@ Ensuite rendez vous sur l'interface web de LibreNMS :
 Compléter les informations suivantes et enregistrer :
 
 ![Screenshot_3](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_3.png)
+
+Vous pouvez tester si le mail marche bien :
+
+![Screenshot_4](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_4.png)
+
+## Règles d'alertes
+
+Maintenant, nous allons configurer les règles d'alertes. Rendez vous sur l'interface web de LibreNMS et créer une alerte :
+
+![Screenshot_5](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_5.png)
+
+Compléter les champs suivants. Pour les règles, utiliser les [**`Entités`**](https://docs.librenms.org/Alerting/Entities/) de la documentation de LibreNMS en fonction vos besoin.
+> Ici, on configure une règle pour savoir si la machine répond au ping
+
+![Screenshot_6](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_6.png)
