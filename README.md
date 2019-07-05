@@ -250,6 +250,8 @@ cd /opt/librenms
 
 Dans le cas des switchs et des routeurs le snmp est à activé dans les configuration. Une fois configurer, ajouter les via l'interface Web de LibreNMS.
 
+![Screenshot_1](https://raw.githubusercontent.com/KyoshinSan/LibreNMS/master/Doc%20librenms/Screenshot_1.png)
+
 ### CentOS 7
 
 Dans cette partie, nous allons voir comment installer SNMP sous CentOS 7, notre machine avec LibreNMS pourra alors interrogé la machine en SNMP.
